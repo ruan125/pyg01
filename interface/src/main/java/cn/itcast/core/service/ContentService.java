@@ -20,4 +20,7 @@ public interface ContentService {
     public List<Content> findByCategoryId(Long categoryId);
 
     public List<Content> findByCategoryIdFromRedis(Long categoryId);
+
+    public List<Content> findByFloorIdFromRedis(Long floorId);
+
 }

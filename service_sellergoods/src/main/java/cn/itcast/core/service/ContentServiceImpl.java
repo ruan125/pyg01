@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ContentServiceImpl implements  ContentService{
+public class ContentServiceImpl implements ContentService {
 
     @Autowired
     private ContentDao contentDao;
@@ -83,7 +83,7 @@ public class ContentServiceImpl implements  ContentService{
     @Override
     public List<Content> findByCategoryIdFromRedis(Long categoryId) {
         //1. 从redis中获取广告集合数据
-        List<Content> contentList = (List<Content>)redisTemplate.boundHashOps(Constants.REDIS_CONTENT_LIST).get(categoryId);
+        List<Content> contentList = (List<Content>) redisTemplate.boundHashOps(Constants.REDIS_CONTENT_LIST).get(categoryId);
         //2. 判断是否能够获取到广告集合数据
         if (contentList != null && contentList.size() > 0) {
             //3. 如果获取到则直接返回
@@ -95,5 +95,22 @@ public class ContentServiceImpl implements  ContentService{
             return contentList;
         }
 
+    }
+
+    @Override
+    public List<Content> findByFloorIdFromRedis(Long floorId) {
+        // 根据分类ID 查询对应广告，先查询redis，如果有直接返回，如果没有去数据库content查询
+        //1.从redis中获取广告集合数据
+        List<Content> floorList = (List<Content>) redisTemplate.boundHashOps(Constants.REDIS_CONTENT_LIST).get(floorId);
+        //2.判断是否能够获取都广告
+        if (floorList != null && !floorList.isEmpty()) {
+            //如果获取只能返回
+            return floorList;
+        }else {
+            //如果获取不到则从数据库中获取，然后存入redis中一份。
+            floorList = findByCategoryId(floorId);
+             redisTemplate.boundHashOps(Constants.REDIS_CONTENT_LIST).put(floorId,floorList);
+             return floorList;
+        }
     }
 }
