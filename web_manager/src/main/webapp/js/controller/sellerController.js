@@ -1,5 +1,5 @@
  //控制层 
-app.controller('sellerController' ,function($scope,$controller   ,sellerService){	
+app.controller('sellerController' ,function($scope,$controller   ,sellerService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -35,9 +35,9 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 	$scope.save=function(){				
 		var serviceObject;//服务层对象  				
 		if($scope.entity.id!=null){//如果有ID
-			serviceObject=sellerService.update( $scope.entity ); //修改  
+			serviceObject=sellerService.update( $scope.entity ); //修改
 		}else{
-			serviceObject=sellerService.add( $scope.entity  );//增加 
+			serviceObject=sellerService.add( $scope.entity  );//增加
 		}				
 		serviceObject.success(
 			function(response){

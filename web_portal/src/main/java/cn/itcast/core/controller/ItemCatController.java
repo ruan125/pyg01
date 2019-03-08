@@ -20,4 +20,10 @@ public class ItemCatController {
         List<ItemCat> list = itemCatService.findByParentId(parentId);
         return list;
     }
+
+
+
+
+
+
 }
