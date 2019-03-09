@@ -22,6 +22,7 @@ public interface GoodsService{
 
     public void updateStatus(Long[] ids, String status);
 
+    //数据库导出
     public void findAll() throws IOException;
 
 }

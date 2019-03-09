@@ -217,6 +217,10 @@ public class GoodsServiceImpl implements GoodsService {
         }
     }
 
+    /**
+     * 数据库导出
+     * @throws IOException
+     */
     @Override
     public void findAll() throws IOException {
 

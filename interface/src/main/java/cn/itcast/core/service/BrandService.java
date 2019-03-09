@@ -24,6 +24,6 @@ public interface BrandService {
 
     public List<Map> selectOptionList();
 
-    //导入数据库
+    //导入到数据库
     public void insertDB() throws Exception;
 }

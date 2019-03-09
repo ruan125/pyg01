@@ -98,7 +98,6 @@ public class BrandServiceImpl implements BrandService {
 
     /**
      * 品牌数据导入数据库
-     * @param
      */
     @Override
     public void insertDB() throws Exception{
