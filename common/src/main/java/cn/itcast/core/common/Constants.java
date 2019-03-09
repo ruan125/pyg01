@@ -1,5 +1,7 @@
 package cn.itcast.core.common;
 
+import java.sql.Statement;
+
 /**
  * 常量
  */
@@ -15,4 +17,6 @@ public interface Constants {
     public final static String REDIS_CART_LIST = "pyg_cartList";
 
     public final static String REDIS_PAYLOG = "payLog";
+
+    public final static String REDIS_SECKILL="seckillGoods";
 }

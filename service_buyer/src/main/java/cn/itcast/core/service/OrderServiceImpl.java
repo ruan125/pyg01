@@ -72,7 +72,6 @@ public class OrderServiceImpl implements  OrderService {
                 //循环购物车明细
                 double money=0;
 
-
                 //4. 从购物车对象中获取购物项集合对象
                 List<OrderItem> orderItemList = cart.getOrderItemList();
                 if (orderItemList != null) {
@@ -128,7 +127,6 @@ public class OrderServiceImpl implements  OrderService {
         payLogDao.updateByPrimaryKeySelective(payLog);
         //2. 根据支付单号查询对应的支付日志对象
         payLog = payLogDao.selectByPrimaryKey(out_trade_no);
-
 
         //3. 获取支付日志对象的订单号属性
         String orderListStr = payLog.getOrderList();
