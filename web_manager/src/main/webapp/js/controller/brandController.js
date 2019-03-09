@@ -79,5 +79,22 @@ app.controller("brandController",function($scope,$controller,$http,brandService)
 			$scope.list = response.rows;
 		});
 	}
+
+    /**
+     * Excel批量导入
+     */
+    $scope.impotr = function(){
+        brandService.impotr().success(function(response){
+            // 判断保存是否成功:
+            if(response.success==true){
+                alert(response.message);
+            }else{
+                // 保存失败
+                alert(response.message);
+            }
+        });
+    }
+
+
 	
 });

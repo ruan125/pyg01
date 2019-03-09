@@ -1,11 +1,14 @@
 package cn.itcast.core.service;
 
+import cn.itcast.core.common.ExcelUtil;
 import cn.itcast.core.dao.good.BrandDao;
 import cn.itcast.core.dao.good.GoodsDao;
 import cn.itcast.core.dao.good.GoodsDescDao;
 import cn.itcast.core.dao.item.ItemCatDao;
 import cn.itcast.core.dao.item.ItemDao;
+import cn.itcast.core.dao.order.OrderItemDao;
 import cn.itcast.core.dao.seller.SellerDao;
+import cn.itcast.core.pojo.entity.ExportEntity;
 import cn.itcast.core.pojo.entity.GoodsEntity;
 import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.good.Brand;
@@ -15,13 +18,18 @@ import cn.itcast.core.pojo.good.GoodsQuery;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.item.ItemCat;
 import cn.itcast.core.pojo.item.ItemQuery;
+import cn.itcast.core.pojo.order.OrderItem;
 import cn.itcast.core.pojo.seller.Seller;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -31,7 +39,9 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import java.io.*;
 import java.math.BigDecimal;
+import java.security.Key;
 import java.util.*;
 
 @Service
@@ -40,6 +50,9 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Autowired
     private GoodsDao goodsDao;
+
+    @Autowired
+    private OrderItemDao orderItemDao;
 
     @Autowired
     private GoodsDescDao descDao;
@@ -95,7 +108,7 @@ public class GoodsServiceImpl implements GoodsService {
                 criteria.andAuditStatusEqualTo(goods.getAuditStatus());
             }
             if (goods.getGoodsName() != null && !"".equals(goods.getGoodsName())) {
-                criteria.andGoodsNameLike("%"+goods.getGoodsName()+"%");
+                criteria.andGoodsNameLike("%" + goods.getGoodsName() + "%");
             }
             //如果不是管理员用户, 根据用户名查询, 如果是管理员用户查询所有数据
             if (!"admin".equals(goods.getSellerId()) && !"wc".equals(goods.getSellerId())
@@ -103,7 +116,7 @@ public class GoodsServiceImpl implements GoodsService {
                 criteria.andSellerIdEqualTo(goods.getSellerId());
             }
         }
-        Page<Goods> goodsList = (Page<Goods>)goodsDao.selectByExample(query);
+        Page<Goods> goodsList = (Page<Goods>) goodsDao.selectByExample(query);
         return new PageResult(goodsList.getTotal(), goodsList.getResult());
     }
 
@@ -204,10 +217,63 @@ public class GoodsServiceImpl implements GoodsService {
         }
     }
 
+    @Override
+    public void findAll() throws IOException {
+
+        List<OrderItem> orderItemList = orderItemDao.selectByExample(null);
+        int count = orderItemList.size();
+        JSONArray ja = new JSONArray();
+        for (OrderItem orderItem : orderItemList) {
+            ExportEntity exportEntity = new ExportEntity();
+
+            Goods goods = goodsDao.selectByPrimaryKey(orderItem.getGoodsId());
+            //订单id
+            exportEntity.setOrderId(orderItem.getOrderId());
+
+            //商品id
+            exportEntity.setId(goods.getId());
+            //商品名称
+            exportEntity.setGoods_name(goods.getGoodsName());
+            //商品价格
+            exportEntity.setPrice(goods.getPrice());
+            //商品购买数量
+            exportEntity.setNum(orderItem.getNum());
+
+            exportEntity.setCategory1Id(goods.getCategory1Id());
+            exportEntity.setCategory2Id(goods.getCategory2Id());
+            exportEntity.setCategory3Id(goods.getCategory3Id());
+
+            ja.add(exportEntity);
+        }
+
+
+        Map<String, String> headMap = new LinkedHashMap<String, String>();
+        headMap.put("orderId", "订单id");
+        headMap.put("id", "商品id");
+        headMap.put("goods_name", "商品名称");
+        headMap.put("price", "商品价格");
+        headMap.put("num", "商品购买数量");
+        headMap.put("category1Id", "一级分类");
+        headMap.put("category2Id", "二级分类");
+        headMap.put("category3Id", "三级分类");
+
+        String title = "商品-订单数据";
+
+        OutputStream outXlsx = new FileOutputStream("E://b.xlsx");
+        System.out.println("正在导出xlsx....");
+        Date d2 = new Date();
+        ExcelUtil.exportExcelX(title, headMap, ja, null, 0, outXlsx);
+        System.out.println("共" + count + "条数据,执行" + (new Date().getTime() - d2.getTime()) + "ms");
+        outXlsx.close();
+
+    }
+
+
     /**
      * 初始化库存对象的属性值
+     *
      * @param goodsEntity 页面传入的商品, 商品详情和库存集合对象
-     * @param item  需要初始化的库存对象
+     * @param item        需要初始化的库存对象
      * @return
      */
     private Item setItemValue(GoodsEntity goodsEntity, Item item) {
@@ -248,6 +314,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 添加库存集合对象
+     *
      * @param goodsEntity
      */
     public void insertItemList(GoodsEntity goodsEntity) {
@@ -294,4 +361,6 @@ public class GoodsServiceImpl implements GoodsService {
             itemDao.insertSelective(item);
         }
     }
+
+
 }
