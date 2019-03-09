@@ -15,13 +15,15 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
+/**
+ * 品牌Excel数据导入
+ */
 @RestController
 @RequestMapping("/impotr")
 public class importController {
 
     @Reference
     private BrandService brandService;
-
 
     @RequestMapping("/importList1Excel")
     public Result importList1Excel() throws Exception{
