@@ -34,6 +34,7 @@ public class SeckillGoodsController {
     @RequestMapping("/updateStatus")
     public Result updateStatus(Long[] Ids, String status) {
         try {
+            
             //1. 根据商品id改变数据库中商品的上架状态
             seckillGoodsService.updateStatus(Ids, status);
             return new Result(true, "修改成功!");
