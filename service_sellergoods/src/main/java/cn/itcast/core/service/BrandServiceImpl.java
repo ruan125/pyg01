@@ -1,5 +1,6 @@
 package cn.itcast.core.service;
 
+import cn.itcast.core.common.importExcel;
 import cn.itcast.core.dao.good.BrandDao;
 import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.good.Brand;
@@ -9,7 +10,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -89,5 +94,26 @@ public class BrandServiceImpl implements BrandService {
     public List<Map> selectOptionList() {
         List<Map> list = brandDao.selectOptionList();
         return list;
+    }
+
+    /**
+     * 品牌数据导入数据库
+     */
+    @Override
+    public void insertDB() throws Exception{
+        String filepath = "e:\\1.xlsx";
+        File file =  new File(filepath);
+        FileInputStream inputStream = new FileInputStream(new File(filepath));
+        List<List<Object>>  list = importExcel.getBankListByExcel(inputStream,filepath);
+        System.out.print(list);
+
+        //将Excel的数据set进数据库
+        //将Excel的数据set进数据库
+        for(int i = 0; i< list.size();i++) {
+                Brand brand = new Brand();
+                brand.setName((String) list.get(i).get(0));
+                brand.setFirstChar((String) list.get(i).get(1));
+                brandDao.insertSelective(brand);
+        }
     }
 }

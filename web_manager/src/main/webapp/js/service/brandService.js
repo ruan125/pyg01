@@ -31,4 +31,8 @@ app.service("brandService",function($http){
 	this.selectOptionList = function(){
 		return $http.get("../brand/selectOptionList.do");
 	}
+
+    this.impotr = function(){
+        return $http.get("../impotr/importList1Excel.do");
+    }
 });

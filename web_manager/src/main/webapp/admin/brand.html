@@ -41,15 +41,15 @@
                                         <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={}"><i class="fa fa-file-o"></i> 新建</button>
                                         <button type="button" class="btn btn-default" title="删除" ng-click="dele()"><i class="fa fa-trash-o"></i> 删除</button>           
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+                                        <button type="button" class="btn btn-default" title="导入" ng-click="impotr();"><i class="fa fa-refresh"></i> 导入</button>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="box-tools pull-right">
-                                <div class="has-feedback">
-							          品牌名称:<input type="text" ng-model="searchEntity.name"> 品牌首字母:<input type="text" ng-model="searchEntity.firstChar"> <input class="btn btn-default" ng-click="reloadList()" type="button" value="查询">                               
-                                </div>
-                            </div>
-                            <!--工具栏/-->
+                            	</div>
+								<div class="box-tools pull-right">
+									<div class="has-feedback">
+										  品牌名称:<input type="text" ng-model="searchEntity.name"> 品牌首字母:<input type="text" ng-model="searchEntity.firstChar"> <input class="btn btn-default" ng-click="reloadList()" type="button" value="查询">
+									</div>
+								</div>
+								<!--工具栏/-->
 
 			                  <!--数据列表-->
 			                  <table id="dataList" class="table table-bordered table-striped table-hover dataTable">

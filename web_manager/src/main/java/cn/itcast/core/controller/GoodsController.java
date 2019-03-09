@@ -66,4 +66,5 @@ public class GoodsController {
             return new Result(false, "修改失败!");
         }
     }
+
 }

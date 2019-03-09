@@ -1,10 +1,14 @@
 package cn.itcast.core.service;
 
+import cn.itcast.core.pojo.entity.ExportEntity;
 import cn.itcast.core.pojo.entity.GoodsEntity;
 import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.good.Goods;
 
-public interface GoodsService {
+import java.io.IOException;
+import java.util.List;
+
+public interface GoodsService{
 
     public void add(GoodsEntity goodsEntity);
 
@@ -17,4 +21,8 @@ public interface GoodsService {
     public void dele(Long[] ids);
 
     public void updateStatus(Long[] ids, String status);
+
+    //数据库导出
+    public void findAll() throws IOException;
+
 }
