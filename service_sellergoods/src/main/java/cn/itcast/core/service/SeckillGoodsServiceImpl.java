@@ -1,23 +1,15 @@
 package cn.itcast.core.service;
 
-import cn.itcast.core.common.IdWorker;
 import cn.itcast.core.dao.seckill.SeckillGoodsDao;
 import cn.itcast.core.pojo.entity.PageResult;
-import cn.itcast.core.pojo.entity.Result;
-import cn.itcast.core.pojo.good.Goods;
-import cn.itcast.core.pojo.good.GoodsQuery;
 import cn.itcast.core.pojo.seckill.SeckillGoods;
 import cn.itcast.core.pojo.seckill.SeckillGoodsQuery;
 import com.alibaba.dubbo.config.annotation.Service;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class SeckillGoodsServiceImpl implements SeckillGoodsService {

@@ -2,7 +2,6 @@ package cn.itcast.core.controller;
 
 import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.entity.Result;
-import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.seckill.SeckillGoods;
 import cn.itcast.core.service.SeckillGoodsService;
 import com.alibaba.dubbo.config.annotation.Reference;
@@ -29,7 +28,6 @@ public class SeckillGoodsController {
     /**
      * 修改商品状态
      *
-     * @param ids    商品id数组
      * @param status 状态码为1审核通过, 状态码为2驳回
      * @return
      */

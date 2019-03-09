@@ -3,19 +3,14 @@ package cn.itcast.core.service;
 import cn.itcast.core.common.Constants;
 import cn.itcast.core.dao.seckill.SeckillOrderDao;
 import cn.itcast.core.pojo.entity.PageResult;
-import cn.itcast.core.pojo.seckill.SeckillGoodsQuery;
 import cn.itcast.core.pojo.seckill.SeckillOrder;
-import cn.itcast.core.pojo.seckill.SeckillOrderQuery;
 import com.alibaba.dubbo.config.annotation.Service;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import org.opensaml.xml.signature.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class SeckillOrderServiceImpl implements SeckillOrderService {
