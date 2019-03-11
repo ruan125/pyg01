@@ -33,4 +33,8 @@ app.service('typeTemplateService',function($http){
 	this.findBySpecList=function(id){
 		return $http.get('../typeTemplate/findBySpecList.do?id='+id);
 	}
+
+    this.impts = function(){
+        return $http.get("../impotr/importList3Excel.do");
+    }
 });

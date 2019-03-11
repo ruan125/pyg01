@@ -1,9 +1,11 @@
 package cn.itcast.core.service;
 
+import cn.itcast.core.common.importExcel;
 import cn.itcast.core.dao.specification.SpecificationDao;
 import cn.itcast.core.dao.specification.SpecificationOptionDao;
 import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.entity.SpecEntity;
+import cn.itcast.core.pojo.good.Brand;
 import cn.itcast.core.pojo.specification.Specification;
 import cn.itcast.core.pojo.specification.SpecificationOption;
 import cn.itcast.core.pojo.specification.SpecificationOptionQuery;
@@ -14,6 +16,8 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -122,4 +126,6 @@ public class SpecServiceImpl implements SpecService {
     public List<Map> selectOptionList() {
         return specDao.selectOptionList();
     }
+
 }
+

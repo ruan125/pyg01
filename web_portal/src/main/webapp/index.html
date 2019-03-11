@@ -23,7 +23,7 @@
    
 </head>
 
-<body ng-app="pinyougou" ng-controller="contentController" ng-init="findByCategoryId(1)">
+<body ng-app="pinyougou" ng-controller="contentController" ng-init="findByCategoryId(1);findByFloorId(6)" >
 	<!-- 头部栏位 -->
 	<!--页面顶部-->
 <div id="nav-bottom">
@@ -526,7 +526,7 @@
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="yui3-u Center banerArea">
 					<!--banner轮播-->
 					<div id="myCarousel" data-ride="carousel" data-interval="4000" class="sui-carousel slide">
@@ -903,19 +903,27 @@
 								</ol>
 								<div class="carousel-inner">
 									<div class="active item">
-										<img src="img/floor-1-b01.png">
+										<!--<img src="img/floor-1-b01.png">-->
+										<a herf="{{floorList[6][1].url}}">
+											<img src="{{floorList[6][1].pic}}">
+										</a>
 									</div>
 									<div class="item">
-										<img src="img/floor-1-b02.png">
+										<a herf="{{floorList[6][0].url}}">
+											<img src="{{floorList[6][0].pic}}">
+										</a>
 									</div>
-									<div class="item">
-										<img src="img/floor-1-b03.png">
-									</div>
+									<!--<div class="item">-->
+										<!--<a herf="{{contentList[6][3].url}}">-->
+											<!--<img src="{{contentList[6][3].pic}}">-->
+										<!--</a>-->
+									<!--</div>-->
 								</div>
 								<a href="#floorCarousel" data-slide="prev" class="carousel-control left">‹</a>
 								<a href="#floorCarousel" data-slide="next" class="carousel-control right">›</a>
 							</div>
 						</div>
+						<!--商品列表 -->
 						<div class="yui3-u row-220 split">
 							<span class="floor-x-line"></span>
 							<div class="floor-conver-pit">
@@ -1229,12 +1237,12 @@
 	<div id="floor-index" class="floor-index">
 		<ul>
 			<li>
-				<a class="num" href="javascript:;" style="display: none;">1F</a>
-				<a class="word" href="javascript;;" style="display: block;">家用电器</a>
+				<a class="num" href="#floor-1" style="display: none;" >1F</a>
+				<a class="word" href="#floor-1" style="display: block;">家用电器</a>
 			</li>
 			<li>
-				<a class="num" href="javascript:;" style="display: none;">2F</a>
-				<a class="word" href="javascript;;" style="display: block;">手机通讯</a>
+				<a class="num" href="#floor-2" style="display: none;">2F</a>
+				<a class="word" href="#floor-2" style="display: block;">手机通讯</a>
 			</li>
 			<li>
 				<a class="num" href="javascript:;" style="display: none;">3F</a>

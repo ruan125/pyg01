@@ -8,10 +8,10 @@ app.controller('goodsController' ,function($scope,$controller,itemCatService   ,
 		goodsService.findAll().success(
 			function(response){
 				$scope.list=response;
-			}			
+			}
 		);
-	}    
-	
+	}
+
 	//分页
 	$scope.findPage=function(page,rows){			
 		goodsService.findPage(page,rows).success(
@@ -102,4 +102,17 @@ app.controller('goodsController' ,function($scope,$controller,itemCatService   ,
 			}
 		});
 	}
+
+    //读商品数据导出到Excel
+    $scope.export=function(){
+        goodsService.export().success(
+            function(response){
+                if(response.success){
+                    alert(response.message);
+                }else{
+                    alert(response.message);
+                }
+            }
+        );
+    }
 });	

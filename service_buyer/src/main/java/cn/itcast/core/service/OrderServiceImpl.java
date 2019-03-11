@@ -10,6 +10,7 @@ import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
+import cn.itcast.core.pojo.order.OrderQuery;
 import cn.itcast.core.pojo.order.OrderItemQuery;
 import cn.itcast.core.pojo.order.OrderQuery;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -17,6 +18,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -71,7 +73,6 @@ public class OrderServiceImpl implements  OrderService {
                 tborder.setSellerId(cart.getSellerId());//商家ID
                 //循环购物车明细
                 double money=0;
-
 
                 //4. 从购物车对象中获取购物项集合对象
                 List<OrderItem> orderItemList = cart.getOrderItemList();
@@ -128,7 +129,6 @@ public class OrderServiceImpl implements  OrderService {
         payLogDao.updateByPrimaryKeySelective(payLog);
         //2. 根据支付单号查询对应的支付日志对象
         payLog = payLogDao.selectByPrimaryKey(out_trade_no);
-
 
         //3. 获取支付日志对象的订单号属性
         String orderListStr = payLog.getOrderList();
@@ -187,5 +187,18 @@ public class OrderServiceImpl implements  OrderService {
         }
         Page<Order> orderPage= (Page<Order>) orders;
         return  new PageResult(orderPage.getTotal(),orderPage.getResult());
+    }
+
+    @Override
+    public PageResult findPage(Integer page, Integer rows, Order order) {
+
+        OrderQuery query=new OrderQuery();
+        OrderQuery.Criteria criteria = query.createCriteria();
+       if (order.getOrderId()!=null && !"".equals(order.getOrderId())){
+           criteria.andOrderIdEqualTo(order.getOrderId());
+        }
+        PageHelper.startPage(page, rows);
+        Page<Order> orderList= (Page<Order>) orderDao.selectByExample(query);
+        return new PageResult(orderList.getTotal(), orderList.getResult());
     }
 }

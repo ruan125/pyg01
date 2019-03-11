@@ -4,6 +4,7 @@ import cn.itcast.core.pojo.entity.Result;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.service.OrderService;
 import cn.itcast.core.service.PayService;
+import cn.itcast.core.service.SeckillOrderService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +26,13 @@ public class PayController {
     @Reference
     private OrderService orderService;
 
+    @Reference
+    private SeckillOrderService seckillOrderService;
+
+
     /**
      * 生成支付链接
+     *
      * @return
      */
     @RequestMapping("/createNative")
@@ -48,7 +54,8 @@ public class PayController {
 
     /**
      * 根据支付单号, 查询是否支付成功
-     * @param out_trade_no  支付单号
+     *
+     * @param out_trade_no 支付单号
      * @return
      */
     @RequestMapping("/queryPayStatus")
@@ -58,16 +65,16 @@ public class PayController {
         Integer flag = 1;
 
         //1. 死循环, 不停的查询是否支付成功
-        while(true) {
+        while (true) {
             //2. 根据支付单号, 调用查询接口, 查询是否支付成功
             Map map = payService.queryPayStatus(out_trade_no);
             if (map == null) {
-                result  = new Result(false, "二维码超时");
+                result = new Result(false, "二维码超时");
                 break;
             }
 
             //3. 如果支付成功,
-            if ("SUCCESS".equals(map.get("trade_state"))){
+            if ("SUCCESS".equals(map.get("trade_state"))) {
                 //修改支付日志为已支付, 修改订单为已支付, redis中的待支付日志对象要删除
                 orderService.updatePayLogAndOrderStatus(out_trade_no);
                 //4. 返回支付成功信息
@@ -81,10 +88,49 @@ public class PayController {
 
             //半小时后如果还不支付, 则超时, 重新生成二维码, 继续扫描
             if (flag >= 600) {
-                result  = new Result(false, "二维码超时");
+                result = new Result(false, "二维码超时");
                 break;
             }
         }
         return result;
     }
+
+    /**
+     * 根据支付单号, 查询是否支付成功
+     *
+     * @param out_trade_no 支付单号
+     * @return
+     */
+    /*@RequestMapping("/queryPayStatus")
+    public Result MqueryPayStatus(String out_trade_no) throws Exception {
+        //获取当前用户
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Result result = null;
+        int x = 0;
+        //死循环,一直查询
+        while (true) {
+            //调用查询接口
+            Map<String, String> map = payService.queryPayStatus(out_trade_no);
+            if (map == null) {
+                result = new Result(false, "支付失败1");
+                break;
+            }
+            if (map.get("trade_state").equals("SUCCESS")) {
+                result = new Result(true, "支付成功!");
+                seckillOrderService.saveOrderFromRedisToDb(userName, Long.valueOf(out_trade_no), map.get("transaction_id"));
+                break;
+            }
+            //5. 每次查询后, 睡三秒
+            Thread.sleep(3000);
+            x++;
+
+            //半小时后如果还不支付, 则超时, 重新生成二维码, 继续扫描
+            if (x >= 600) {
+                result = new Result(false, "二维码超时");
+                break;
+            }
+        }
+        return result;
+    }*/
 }
+
