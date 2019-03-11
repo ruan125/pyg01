@@ -6,10 +6,15 @@ import cn.itcast.core.dao.log.PayLogDao;
 import cn.itcast.core.dao.order.OrderDao;
 import cn.itcast.core.dao.order.OrderItemDao;
 import cn.itcast.core.pojo.entity.BuyerCart;
+import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
+import cn.itcast.core.pojo.order.OrderItemQuery;
+import cn.itcast.core.pojo.order.OrderQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -143,5 +148,44 @@ public class OrderServiceImpl implements  OrderService {
 
         //5. 根据用户名清除redis中未支付的支付日志对象
         redisTemplate.boundHashOps(Constants.REDIS_PAYLOG).delete(payLog.getUserId());
+    }
+
+    /**
+     * 根据用户名,和订单状态查询订单集合
+     * @param userName  用户名
+     * @param status    订单状态
+     * @return  返回订单实体类
+     */
+    @Override
+    public PageResult userSeletOrder( String userName, String status,Integer page,Integer rows) {
+        PageHelper.startPage(page, rows);
+        //根据用户名和状态获取此用户的所有订单信息
+        OrderQuery query=new OrderQuery();
+        OrderQuery.Criteria criteria = query.createCriteria();
+        criteria.andUserIdEqualTo(userName);
+        if("1".equals(status)){
+            criteria.andStatusEqualTo("1");
+        }
+        if("3".equals(status)){
+            criteria.andStatusEqualTo("3");
+        }
+        if("4".equals(status)){
+            criteria.andStatusEqualTo("4");
+        }
+        if("7".equals(status)){
+            criteria.andStatusEqualTo("7");
+        }
+        List<Order> orders = orderDao.selectByExample(query);
+        //根据订单集合遍历获取订单对象中的order_id 然后在orderItem中条件查询
+        OrderItemQuery itemQuery = new OrderItemQuery();
+        OrderItemQuery.Criteria itemQueryCriteria = itemQuery.createCriteria();
+        for (Order order : orders) {
+             itemQueryCriteria.andOrderIdEqualTo(order.getOrderId());
+            List<OrderItem> orderItems = orderItemDao.selectByExample(itemQuery);
+            order.setOrderItemList(orderItems);
+            orders.add(order);
+        }
+        Page<Order> orderPage= (Page<Order>) orders;
+        return  new PageResult(orderPage.getTotal(),orderPage.getResult());
     }
 }

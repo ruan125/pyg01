@@ -1,7 +1,20 @@
  //控制层 
-app.controller('userController' ,function($scope,$controller   ,userService){	
-	
-	//注册用户
+app.controller('userController' ,function($scope,$controller ,userService){
+
+    // 根据用户名回显
+    $controller('baseController',{$scope:$scope});
+
+    $scope.showName=function(){
+        loginService.showName().success(
+            function(response){
+                $scope.loginName=response;
+            }
+        );
+    }
+
+
+
+    //注册用户
 	$scope.reg=function(){
 		
 		//比较两次输入的密码是否一致

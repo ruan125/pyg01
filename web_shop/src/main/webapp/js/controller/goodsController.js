@@ -173,7 +173,6 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 			$scope.typeTemplate = response;
 			// 将品牌的字符串数据转成JSON
 			$scope.typeTemplate.brandIds = JSON.parse( $scope.typeTemplate.brandIds );
-			
 			// 将扩展属性的字符串转成JSON
 			if($location.search()['id'] == null){
 				$scope.entity.goodsDesc.customAttributeItems = JSON.parse( $scope.typeTemplate.customAttributeItems );

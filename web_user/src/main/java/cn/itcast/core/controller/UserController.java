@@ -1,15 +1,19 @@
 package cn.itcast.core.controller;
 
 import cn.itcast.core.common.PhoneFormatCheckUtils;
+import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.entity.Result;
+import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.user.User;
 import cn.itcast.core.service.UserService;
 import com.alibaba.dubbo.config.annotation.Reference;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -68,4 +72,16 @@ public class UserController {
             return new Result(false, "注册失败!");
         }
     }
+
+
+    //分页查询所有订单
+    @RequestMapping("/search")
+    public PageResult search(Integer page, Integer rows, @RequestBody Order order) {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        PageResult search = userService.search(userName, page, rows, order);
+        return search;
+    }
+
+
+
 }

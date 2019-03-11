@@ -99,6 +99,7 @@ public class PayServiceImpl implements  PayService {
 
     }
 
+
     @Override
     public PayLog findPageLogFromRedis(String userName) {
         PayLog payLog = (PayLog)redisTemplate.boundHashOps(Constants.REDIS_PAYLOG).get(userName);
