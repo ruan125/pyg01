@@ -26,4 +26,12 @@ public interface OrderService {
     public PageResult findPage(Integer page, Integer rows ,Order order);
 
 
+
+    /**
+     * 根据用户名 和订单状态查询查询订单集合
+     * @param userName  用户名
+     * @param status    订单状态
+     * @return
+     */
+    public PageResult userSeletOrder(String userName, String status,Integer page,Integer rows);
 }
